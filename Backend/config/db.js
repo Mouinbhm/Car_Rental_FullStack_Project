@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 module.exports.connectDB = async () => {
   mongoose.set("strictQuery", false);
   mongoose
-    .connect(
-      "mongodb+srv://belhajmouin:eBWcEy1GVmZ7EqHu@cluster0.xhaybla.mongodb.net/"
-    )
+    .connect(process.env.URL_MONGODB)
     .then(() => {
       console.log("MongoDB connected");
     })
