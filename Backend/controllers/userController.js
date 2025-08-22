@@ -21,6 +21,18 @@ module.exports.getUserById = async (req, res) => {
   }
 };
 
+module.exports.getUserByPhone = async (req, res) => {
+  try {
+    const user = await userModel.findOne({ phone: req.params.phone });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports.addClient = async (req, res) => {
   try {
     const { firstName, lastName, email, password, phone, userImg } = req.body;
