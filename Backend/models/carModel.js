@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const specsSchema = new mongoose.Schema(
+  {
+    engine: { type: String, trim: true }, // ex: "1.5L 4-cylinder"
+    consumption: { type: String, trim: true }, // ex: "5.1L/100km"
+    doors: { type: Number, min: 2, max: 6 },
+    luggage: { type: Number, min: 0 },
+    year: {
+      type: Number,
+      min: 1886,
+      max: new Date().getFullYear() + 1,
+    },
+  },
+  { _id: false }
+);
+
 const carSchema = new mongoose.Schema(
   {
     make: { type: String, required: true, trim: true },
@@ -41,6 +56,7 @@ const carSchema = new mongoose.Schema(
     },
 
     seats: { type: Number, required: true, min: 1 },
+
     dailyRate: { type: Number, required: true, min: 0 },
 
     status: {
@@ -49,10 +65,14 @@ const carSchema = new mongoose.Schema(
       enum: ["available", "unavailable"],
       default: "available",
     },
+
+    // Champs pour ton front
+    image: { type: String, trim: true },
+    features: { type: [String], default: [] },
+    description: { type: String, trim: true },
+    specs: specsSchema,
   },
   { timestamps: true }
 );
 
-const Car = mongoose.model("Car", carSchema);
-
-module.exports = Car;
+module.exports = mongoose.model("Car", carSchema);
