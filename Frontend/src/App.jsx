@@ -1,21 +1,26 @@
-import { Link, Routes, Route } from "react-router-dom";
+import { Link, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
+import Home from "./components/Home";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-import Cars from "./components/Pages/Cars";
-import Order from "./components/Pages/Order";
-import Contact from "./components/Pages/Contactus";
-import Destinations from "./components/Pages/Destinations";
+import Cars from "./pages/Cars";
+import Order from "./pages/Order";
+import Contact from "./pages/Contactus";
+import Destinations from "./pages/Destinations";
+import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 
-import AdminDashboard from "./components/Pages/Admin/Dashboard";
-
-
-
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import VehicleFleetPage from "./pages/admin/VehicleFleetPage.jsx";
+import AdminMessages from "./pages/admin/AdminMessages.jsx";
+import AdminLogin from "./components/AdminLogin.jsx";
+import CarsByCategory from "./components/CarsByCategory";
+import AdminBookings from "./pages/admin/AdminBookings.jsx";
+import AdminLayout from "./layouts/Admin.jsx";
 
 function App() {
   useEffect(() => {
@@ -31,19 +36,67 @@ function App() {
             <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
               <span className="text-white font-bold text-xl">DS</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Drive Safe Rentals</span>
+            <span className="text-xl font-bold text-gray-900">
+              Drive Safe Rentals
+            </span>
           </div>
           <div className="hidden md:flex space-x-8">
-            <Link to="/" className="text-gray-900 font-medium hover:text-blue-500 transition">Home</Link>
-            <Link to="/cars" className="text-gray-600 hover:text-blue-500 transition">Cars</Link>
-            <Link to="/contact" className="text-gray-600 hover:text-blue-500 transition">Contact us</Link>
-            <Link to="/dest" className="text-gray-600 hover:text-blue-500 transition">Destinations</Link>
-            <Link to="/login" className="text-gray-600 hover:text-blue-500 transition">Login</Link>
-            <Link to="/register" className="text-gray-600 hover:text-blue-500 transition">Register</Link>
+            <Link
+              to="/"
+              className="text-gray-900 font-medium hover:text-blue-500 transition"
+            >
+              Home
+            </Link>
+            <Link
+              to="/cars"
+              className="text-gray-600 hover:text-blue-500 transition"
+            >
+              Cars
+            </Link>
+            <Link
+              to="/contact"
+              className="text-gray-600 hover:text-blue-500 transition"
+            >
+              Contact us
+            </Link>
+            <Link
+              to="/dest"
+              className="text-gray-600 hover:text-blue-500 transition"
+            >
+              Destinations
+            </Link>
+            <Link
+              to="/login"
+              className="text-gray-600 hover:text-blue-500 transition"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="text-gray-600 hover:text-blue-500 transition"
+            >
+              Register
+            </Link>
+            <Link
+              to="/admin-login"
+              className="text-gray-600 hover:text-blue-500 transition"
+            >
+              Admin
+            </Link>
           </div>
           <button className="md:hidden text-gray-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
             </svg>
           </button>
         </div>
@@ -55,12 +108,29 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/cars" element={<Cars />} />
+          <Route path="/cars/category/:category" element={<CarsByCategory />} />
           <Route path="/order" element={<Order />} />
+          <Route path="/order/confirmation" element={<OrderConfirmation />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/dest" element={<Destinations />} />
 
-          <Route path="/admindb" element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute isAdmin={true}>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            {/* Redirection façon Notus: /admin -> /admin/dashboard */}
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="bookings" element={<AdminBookings />} />
+            <Route path="cars" element={<VehicleFleetPage />} />
+            <Route path="messages" element={<AdminMessages />} />
+          </Route>
         </Routes>
       </main>
 

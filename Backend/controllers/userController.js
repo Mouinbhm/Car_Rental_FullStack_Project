@@ -1,5 +1,4 @@
 const userModel = require("../models/userModel");
-const { updateCar } = require("./carController");
 
 module.exports.getAllUsers = async (req, res) => {
   try {
@@ -54,7 +53,6 @@ module.exports.addClient = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 module.exports.deleteUser = async (req, res) => {
   try {
