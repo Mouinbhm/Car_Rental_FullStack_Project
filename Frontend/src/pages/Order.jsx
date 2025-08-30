@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
+import resolveImageUrl from "../utils/imageUrl";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -286,9 +287,13 @@ const Order = () => {
 
                   <div className="mb-6" data-aos="zoom-in" data-aos-delay="300">
                     <img
-                      src={selectedCar.image}
+                      src={resolveImageUrl(selectedCar.image)}
                       alt={selectedCar.name}
                       className="w-full h-48 object-cover rounded-lg"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop";
+                      }}
                     />
                   </div>
 
