@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import resolveImageUrl from "../../utils/imageUrl";
 
 export default function VehicleFleetPage() {
   const [cars, setCars] = useState([]);
@@ -339,7 +340,7 @@ export default function VehicleFleetPage() {
                             {car.image ? (
                               <img
                                 className="h-10 w-10 rounded-full object-cover"
-                                src={car.image}
+                                src={resolveImageUrl(car.image)}
                                 alt={car.model}
                               />
                             ) : (

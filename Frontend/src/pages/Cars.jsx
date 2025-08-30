@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
+import resolveImageUrl from "../utils/imageUrl";
 
 const Cars = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -247,9 +248,10 @@ const Cars = () => {
                 const categoryLabel = getCategoryLabel(car.category);
                 const availabilityText =
                   car.status === "available" ? "Available" : "Unavailable";
-                const image =
+                const image = resolveImageUrl(
                   car.image ||
-                  "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop";
+                    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1600&auto=format&fit=crop"
+                );
                 const name =
                   `${car.make || ""} ${car.model || ""}`.trim() || "Vehicle";
                 const price = Number(car.dailyRate || 0);

@@ -4,6 +4,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import resolveImageUrl from "../utils/imageUrl";
 
 const API_BASE_URL = "http://localhost:5000/cars";
 
@@ -120,10 +121,10 @@ const CarsByCategory = () => {
                 >
                   <div className="relative">
                     <img
-                      src={
+                      src={resolveImageUrl(
                         car.image ||
-                        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=60"
-                      }
+                          "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=60"
+                      )}
                       alt={`${car.make} ${car.model}`}
                       className="w-full h-56 object-cover"
                     />

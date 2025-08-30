@@ -11,6 +11,7 @@ import {
   FiTag,
   FiX,
   FiRefreshCcw,
+  FiTrash2,
 } from "react-icons/fi";
 
 const AdminMessages = () => {
@@ -20,6 +21,7 @@ const AdminMessages = () => {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const API_BASE_URL = "http://localhost:5000/contact";
 
@@ -83,9 +85,42 @@ const AdminMessages = () => {
     return `${base} bg-gray-100 text-gray-700`;
   };
 
-  const openView = (msg) => {
+  const openView = async (msg) => {
     setSelected(msg);
     setShowModal(true);
+
+    // Update message status to "read" if it's currently "new"
+    if (msg.status === "new" || !msg.status) {
+      try {
+        await axios.put(`${API_BASE_URL}/updateMessageStatus/${msg._id}`, {
+          status: "read",
+        });
+        // Update local state
+        setMessages((prev) =>
+          prev.map((m) => (m._id === msg._id ? { ...m, status: "read" } : m))
+        );
+      } catch (error) {
+        console.error("Failed to update message status:", error);
+      }
+    }
+  };
+
+  const handleDelete = async (messageId) => {
+    if (!window.confirm("Are you sure you want to delete this message?")) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      await axios.delete(`${API_BASE_URL}/deleteMessage/${messageId}`);
+      // Remove from local state
+      setMessages((prev) => prev.filter((m) => m._id !== messageId));
+    } catch (error) {
+      console.error("Failed to delete message:", error);
+      alert("Failed to delete message. Please try again.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -217,12 +252,21 @@ const AdminMessages = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <button
-                          onClick={() => openView(m)}
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          View
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => openView(m)}
+                            className="text-blue-600 hover:text-blue-800"
+                          >
+                            View
+                          </button>
+                          <button
+                            onClick={() => handleDelete(m._id)}
+                            disabled={deleting}
+                            className="text-red-600 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <FiTrash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
